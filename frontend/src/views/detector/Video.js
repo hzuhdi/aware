@@ -5,9 +5,9 @@ import MainCard from 'ui-component/cards/MainCard';
 import SecondaryAction from 'ui-component/cards/CardSecondaryAction';
 import { gridSpacing } from 'store/constant';
 
-// ==============================|| TYPOGRAPHY ||============================== //
+// ==============================|| Video ||============================== //
 
-const Typography = () => (
+const Video = () => (
     <MainCard title="Video" secondary={<SecondaryAction link="https://next.material-ui.com/system/typography/" />}>
         <Grid container spacing={gridSpacing}>
             
@@ -15,4 +15,4 @@ const Typography = () => (
     </MainCard>
 );
 
-export default Typography;
+export default Video;

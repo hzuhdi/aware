@@ -1,12 +1,12 @@
 // assets
-import { IconDashboard, IconPhoto, IconBrandYoutube, IconHeadset } from '@tabler/icons';
+import { IconPhoto, IconBrandYoutube, IconHeadset } from '@tabler/icons';
 
 // constant
-const icons = { IconDashboard, IconPhoto, IconBrandYoutube, IconHeadset };
+const icons = { IconPhoto, IconBrandYoutube, IconHeadset };
 
-// ==============================|| DASHBOARD MENU ITEMS ||============================== //
+// ==============================|| DETECTOR MENU ITEMS ||============================== //
 
-const dashboard = {
+const detector = {
     id: 'detector',
     title: 'Detector',
     type: 'group',
@@ -38,4 +38,4 @@ const dashboard = {
     ]
 };
 
-export default dashboard;
+export default detector;
