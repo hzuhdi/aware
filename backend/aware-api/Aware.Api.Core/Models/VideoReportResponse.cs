@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Aware.Api.Core.Models
 {
     public class VideoReportResponse : VideoReportRequest
     {
+        [JsonIgnore]
         public DateTime ProcessedDate { get; private set; } = DateTime.UtcNow;
+
     }
 }

@@ -31,7 +31,6 @@ namespace Aware.Api.MachineLearningClient.Clients
         {
             return $@"
 import json
-import time
 
 class VideoAnalysisReport:
     def __init__(self, url, hasDeepfake):
@@ -42,7 +41,6 @@ class VideoAnalysisReport:
             sort_keys=True, indent=4)
                 
 def analyzeVideo(url, hasDeepfake):
-    time.sleep(3)
     return VideoAnalysisReport(url, hasDeepfake).toJSON()
             ";
         }
