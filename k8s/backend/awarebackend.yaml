@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aware-backend
+  name: aware-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aware-backend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: aware-backend
+    spec:
+      containers:
+      - image: hafizhaz/aware-backend:latest
+        name: aware-backend
+        resources: {}
+        env:
+        - name: ASPNETCORE_ENVIRONMENT
+          value: 'Production'
+        ports:
+        - containerPort: 80
+status: {}
