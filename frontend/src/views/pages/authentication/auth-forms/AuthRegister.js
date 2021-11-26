@@ -36,6 +36,8 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+import { userActions } from 'store/actions'
+
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
 const FirebaseRegister = ({ ...others }) => {
@@ -48,6 +50,23 @@ const FirebaseRegister = ({ ...others }) => {
 
     const [strength, setStrength] = useState(0);
     const [level, setLevel] = useState();
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [submit, setSubmit] = useState(false);
+
+    const actionCreators = {
+        register: userActions.register
+    }
+
+    function mapState(state) {
+        const { registering } = state.registration;
+        return { registering };
+    }
+
+    // const connectedRegisterPage = connect(mapState, actionCreators)(RegisterPage);
 
     const googleHandler = async () => {
         console.error('Register');
@@ -71,6 +90,30 @@ const FirebaseRegister = ({ ...others }) => {
         changePassword('123456');
     }, []);
 
+    // Newly added functionl
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        switch(name){
+            case "firstName":
+                setFirstName(value);
+            case "lastName":
+                setLastName(value);
+        }
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        setSubmit(true);
+        if (firstName && lastName && username && password) {
+            this.props.register({
+                "firstName": firstName,
+                "lastName": lastName,
+                "username": username,
+                "password": password
+            });
+        }
+    }
+
     return (
         <>
             <Grid container direction="column" justifyContent="center" spacing={2}>
@@ -90,7 +133,7 @@ const FirebaseRegister = ({ ...others }) => {
                             <Box sx={{ mr: { xs: 1, sm: 2, width: 20 } }}>
                                 <img src={Google} alt="google" width={16} height={16} style={{ marginRight: matchDownSM ? 8 : 16 }} />
                             </Box>
-                            Sign up with Google
+                            Sign up with Googled
                         </Button>
                     </AnimateButton>
                 </Grid>
@@ -292,7 +335,7 @@ const FirebaseRegister = ({ ...others }) => {
                                     variant="contained"
                                     color="secondary"
                                 >
-                                    Sign up
+                                    Sign upddd
                                 </Button>
                             </AnimateButton>
                         </Box>
