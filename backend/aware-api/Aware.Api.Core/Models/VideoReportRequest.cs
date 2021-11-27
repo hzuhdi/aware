@@ -7,11 +7,7 @@ namespace Aware.Api.Core.Models
         [JsonIgnore]
         public DateTime InsertDate { get; private set; } = DateTime.UtcNow;
         
-        [JsonPropertyName("url")]
-        public string Url { get; set; }
-
-        [JsonPropertyName("hasDeepfake")]
-        public bool HasDeepfake { get; set; }
-
+        [JsonPropertyName("filename")]
+        public string Filename { get; set; }
     }
 }

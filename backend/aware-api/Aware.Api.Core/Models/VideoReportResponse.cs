@@ -7,5 +7,8 @@ namespace Aware.Api.Core.Models
         [JsonIgnore]
         public DateTime ProcessedDate { get; private set; } = DateTime.UtcNow;
 
+        [JsonPropertyName("deepfakePercentage")]
+        public double DeepfakePercentage { get; set; }
+
     }
 }

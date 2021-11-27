@@ -15,4 +15,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Aware.Api.Core\Aware.Api.Core.csproj" />
+    <ProjectReference Include="..\Aware.Api.MachineLearningClient\Aware.Api.MachineLearningClient.csproj" />
+  </ItemGroup>
+
 </Project>

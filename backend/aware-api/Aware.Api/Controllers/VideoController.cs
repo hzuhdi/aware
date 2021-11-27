@@ -1,5 +1,6 @@
 using Aware.Api.Constants;
-using Aware.Api.Models;
+using Aware.Api.Core.Interfaces;
+using Aware.Api.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aware.Api.Controllers
@@ -9,22 +10,12 @@ namespace Aware.Api.Controllers
     public class VideoController : ControllerBase
     {
         private readonly ILogger<VideoController> _logger;
+        private readonly IPythonClient<VideoReportRequest, VideoReportResponse> _client;
 
-        public VideoController(ILogger<VideoController> logger)
+        public VideoController(IPythonClient<VideoReportRequest, VideoReportResponse> client, ILogger<VideoController> logger)
         {
+            _client = client;
             _logger = logger;
-        }
-
-        [HttpGet(Constant.Scan + "/{url}")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get(string url, CancellationToken cancellationToken = default)
-        {
-            var videoResponse = new VideoResponse()
-            {
-                Url = url
-            };
-            return Ok(videoResponse); ;
         }
 
         [HttpPost(Constant.Scan)]
@@ -34,7 +25,14 @@ namespace Aware.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> Post(IFormFile formFile, CancellationToken cancellationToken = default)
         {
-            return Ok();
+            var request = new VideoReportRequest()
+            {
+                Filename = formFile.FileName
+            };
+            
+            var response = await _client.ExecuteAsync(request, cancellationToken);
+            
+            return Ok(response);
         }
     }
 }
