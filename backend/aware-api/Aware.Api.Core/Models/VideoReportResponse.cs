@@ -8,8 +8,15 @@ namespace Aware.Api.Core.Models
         [JsonIgnore]
         public DateTime ProcessedDate { get; private set; } = DateTime.UtcNow;
 
-        [JsonPropertyName("deepfakePercentage")]
+        [JsonPropertyName("percentage")]
         public double DeepfakePercentage { get; set; }
+
+        [JsonPropertyName("filename")]
+        public string? Filename { get; set; }
+
+        public string Description => 
+            DeepfakePercentage >= 50 ? 
+            "Deepfake detected.":"This is a real video.";
 
     }
 }

@@ -8,8 +8,9 @@ namespace Aware.Api.Core.Models
 
         public TimeSpan ProcessingTime { get; set; }
 
-        public double DeepfakePercentage { get; set; }        
+        public double DeepfakePercentage { get; set; }
         
+        public string Description { get; set; }
     }
 
 }

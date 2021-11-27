@@ -8,7 +8,6 @@ namespace Aware.Api.Core.Models
         [JsonIgnore]
         public DateTime InsertDate { get; private set; } = DateTime.UtcNow;
 
-        [JsonPropertyName("filename")]
         public string? Filepath { get; set; }
     }
 }

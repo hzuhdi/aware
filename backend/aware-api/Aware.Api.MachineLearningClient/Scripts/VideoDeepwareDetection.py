@@ -2,9 +2,9 @@ import json
 import random
 
 class VideoAnalysisReport:
-    def __init__(self, filename, deepfakePercentage):
+    def __init__(self, filename, percentage):
       self.filename = filename
-      self.deepfakePercentage = deepfakePercentage
+      self.percentage = percentage
     def toJSON(self):
         return json.dumps(self, default=lambda o: o.__dict__, 
             sort_keys=True, indent=4)

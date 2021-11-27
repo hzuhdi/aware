@@ -39,6 +39,7 @@ namespace Aware.Api.Core.Services
             {
                 Filename = filename,
                 DeepfakePercentage = response.DeepfakePercentage,
+                Description = response.Description,
                 ProcessingTime = response.ProcessedDate - response.InsertDate,
             };
 
