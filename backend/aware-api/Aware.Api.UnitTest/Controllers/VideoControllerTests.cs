@@ -15,13 +15,13 @@ namespace Aware.Api.UnitTest.Controllers
 {
     public class VideoControllerTests
     {
-        private Mock<IPythonClient<VideoReportRequest, VideoReportResponse>> _pythonClient;
+        private Mock<IDeepwareDetectionService<VideoReportApiRequestModel, VideoReportApiResponseModel>> _service;
         private VideoController _controller;
 
         public VideoControllerTests()
         {
-            _pythonClient = new Mock<IPythonClient<VideoReportRequest, VideoReportResponse>>();
-            _controller = new VideoController(_pythonClient.Object, Mock.Of<ILogger<VideoController>>());
+            _service = new Mock<IDeepwareDetectionService<VideoReportApiRequestModel, VideoReportApiResponseModel>>();
+            _controller = new VideoController(_service.Object, Mock.Of<ILogger<VideoController>>());
         }
 
         [Fact]
@@ -35,8 +35,8 @@ namespace Aware.Api.UnitTest.Controllers
             var item = new Mock<IFormFile>();
             item.Setup(i => i.FileName).Returns(filename);
 
-            _pythonClient.Setup(x => x.ExecuteAsync(It.IsAny<VideoReportRequest>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new VideoReportResponse() { Filename = filename, DeepfakePercentage = dfPercentage});
+            _service.Setup(x => x.ScanAsync(It.IsAny<VideoReportApiRequestModel>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new VideoReportApiResponseModel() { Filename = filename, DeepfakePercentage = dfPercentage});
 
 
             // Act
@@ -48,7 +48,7 @@ namespace Aware.Api.UnitTest.Controllers
             okResult.Value.Should().BeOfType<VideoReportResponse>();
             var response = (VideoReportResponse)okResult.Value;
             response.Should().NotBeNull();
-            response.Filename.Should().Be(filename);
+            response.Filepath.Should().Be(filename);
             response.DeepfakePercentage.Should().Be(dfPercentage);
             response.ProcessedDate.Should().BeAfter(response.InsertDate);
         }

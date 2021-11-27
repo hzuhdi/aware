@@ -1,3 +1,4 @@
+using Aware.Api.Attributes;
 using Aware.Api.Constants;
 using Aware.Api.Core.Interfaces;
 using Aware.Api.Core.Models;
@@ -10,27 +11,23 @@ namespace Aware.Api.Controllers
     public class VideoController : ControllerBase
     {
         private readonly ILogger<VideoController> _logger;
-        private readonly IPythonClient<VideoReportRequest, VideoReportResponse> _client;
+        private readonly IDeepwareDetectionService<VideoReportApiRequestModel, VideoReportApiResponseModel> _detectionService;
 
-        public VideoController(IPythonClient<VideoReportRequest, VideoReportResponse> client, ILogger<VideoController> logger)
+        public VideoController(
+            IDeepwareDetectionService<VideoReportApiRequestModel, VideoReportApiResponseModel> detectionService,
+            ILogger<VideoController> logger)
         {
-            _client = client;
+            _detectionService = detectionService;
             _logger = logger;
         }
 
         [HttpPost(Constant.Scan)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post(IFormFile formFile, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Post([AllowedExtensions(new[] { ".mp4", ".avi" })] IFormFile formFile, CancellationToken cancellationToken = default)
         {
-            var request = new VideoReportRequest()
-            {
-                Filename = formFile.FileName
-            };
-            
-            var response = await _client.ExecuteAsync(request, cancellationToken);
+            var response = await _detectionService.ScanAsync(formFile, cancellationToken);
             
             return Ok(response);
         }

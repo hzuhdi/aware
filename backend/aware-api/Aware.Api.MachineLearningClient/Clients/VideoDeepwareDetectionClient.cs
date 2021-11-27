@@ -22,7 +22,7 @@ namespace Aware.Api.MachineLearningClient.Clients
             }
             string? jsonString = null;
 
-            await Task.Factory.StartNew(() => jsonString = analyzeVideo(requestModel.Filename));
+            await Task.Factory.StartNew(() => jsonString = analyzeVideo(requestModel.Filepath));
 
             if (string.IsNullOrEmpty(jsonString)) return null;
 
