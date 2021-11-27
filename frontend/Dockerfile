@@ -3,6 +3,12 @@ FROM tiangolo/node-frontend:10 as build-stage
 WORKDIR /app
 COPY package*.json /app/
 RUN npm install
+ARG REACT_APP_AUTH0_DOMAIN
+ENV REACT_APP_AUTH0_DOMAIN $REACT_APP_AUTH0_DOMAIN
+
+ARG REACT_APP_AUTH0_CLIENT_ID
+ENV REACT_APP_AUTH0_CLIENT_ID $REACT_APP_AUTH0_CLIENT_ID
+
 COPY ./ /app/
 RUN npm run build
 # Stage 1, based on Nginx, to have only the compiled app, ready for production with Nginx
