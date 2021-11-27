@@ -32,18 +32,19 @@ const Video = () => {
     const uploadFile = () => {
         let formFile = new FormData();
         formFile.append('formFile', file);
-        axios.post(`https://localhost:7057/Video/Scan`, formFile, {
+        const baseUrl = process.env.REACT_APP_BACKEND_URL
+        axios.post(baseUrl + 'Video/Scan', formFile, {
             headers: {
                 'Content-Type': 'multipart/form-data'
               }
           })
             .then(res => {
                 console.log(res);
-                if (res.status == 200) {
+                if (res.status === 200) {
                     console.log(res.data);
                     setFileNameResult(res.data.filename ?? '');
-                    setDetectionResult(res.data.label ?? '');
-                    setPercentage(res.data.percentage ?? '');
+                    setDetectionResult(res.data.description ?? '');
+                    setPercentage(res.data.deepfakePercentage ?? '');
                 }
             })
     }
