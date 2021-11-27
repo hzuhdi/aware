@@ -1,9 +1,9 @@
 ﻿namespace Aware.Api.Core.Interfaces
 {
-    public interface IPythonClient<TRequestModel, TResponseModel>
-        where TRequestModel : class
-        where TResponseModel : class
+    public interface IPythonClient<TReportRequest, TReportResponse>
+        where TReportRequest : IReportRequest
+        where TReportResponse : IReportResponse
     {
-        Task<TResponseModel?> ExecuteAsync(TRequestModel requestModel, CancellationToken cancellationToken);
+        Task<TReportResponse?> ExecuteAsync(TReportRequest requestModel, CancellationToken cancellationToken);
     }
 }

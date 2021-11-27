@@ -5,14 +5,18 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Aware.Api.csproj", "."]
-RUN dotnet restore "./Aware.Api.csproj"
+# COPY ["Aware.Api.csproj", "./"]
+# RUN dotnet restore "./Aware.Api.csproj"
 COPY . .
-WORKDIR "/src/."
-RUN dotnet build "Aware.Api.csproj" -c Release -o /app/build
+RUN dotnet restore "Aware.Api/Aware.Api.csproj"
+
+WORKDIR /src/.
+
+COPY . .
+RUN dotnet build "Aware.Api/Aware.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Aware.Api.csproj" -c Release -o /app/publish
+RUN dotnet publish "Aware.Api/Aware.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app

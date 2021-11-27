@@ -6,43 +6,25 @@ namespace Aware.Api.MachineLearningClient.Clients
 {
     public class VideoDeepwareDetectionClient : PythonClientBase, IPythonClient<VideoReportRequest, VideoReportResponse>
     {
+        private const string ScriptFilename = "VideoDeepwareDetection.py";
         public VideoDeepwareDetectionClient() : base() { }
 
         public async Task<VideoReportResponse?> ExecuteAsync(VideoReportRequest requestModel, CancellationToken cancellationToken = default)
         {
-            var script = GetScript();
-            await InitializeEngineWithScript(script, cancellationToken);
+            var fileDirectory = GetFilePath(ScriptFilename);
 
-            var analyzeVideo = _scope?.GetVariable<Func<string, bool, string>>("analyzeVideo");
-            if (analyzeVideo == null)
-            {
-                throw new ArgumentNullException(nameof(analyzeVideo));
-            }
-            string? result = null;
+            await InitalizeEngineWithFileScript(fileDirectory, cancellationToken);
 
-            await Task.Factory.StartNew(() => result = analyzeVideo(requestModel.Url, requestModel.HasDeepfake));
+            var analyzeVideo = _scope?.GetVariable<Func<string, string>>("analyzeVideo");
+            if (analyzeVideo == null) throw new ArgumentNullException(nameof(analyzeVideo));
 
-            if (string.IsNullOrEmpty(result)) return null;
+            string? jsonString = null;
 
-            return JsonSerializer.Deserialize<VideoReportResponse>(result);
-        }
+            await Task.Factory.StartNew(() => jsonString = analyzeVideo(requestModel.Filepath));
 
-        private static string GetScript()
-        {
-            return $@"
-import json
+            if (string.IsNullOrEmpty(jsonString)) return null;
 
-class VideoAnalysisReport:
-    def __init__(self, url, hasDeepfake):
-      self.url = url
-      self.hasDeepfake = hasDeepfake
-    def toJSON(self):
-        return json.dumps(self, default=lambda o: o.__dict__, 
-            sort_keys=True, indent=4)
-                
-def analyzeVideo(url, hasDeepfake):
-    return VideoAnalysisReport(url, hasDeepfake).toJSON()
-            ";
+            return JsonSerializer.Deserialize<VideoReportResponse>(jsonString);
         }
     }
 }

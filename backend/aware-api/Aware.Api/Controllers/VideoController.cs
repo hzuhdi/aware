@@ -1,5 +1,7 @@
+using Aware.Api.Attributes;
 using Aware.Api.Constants;
-using Aware.Api.Models;
+using Aware.Api.Core.Interfaces;
+using Aware.Api.Core.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Aware.Api.Controllers
@@ -9,32 +11,25 @@ namespace Aware.Api.Controllers
     public class VideoController : ControllerBase
     {
         private readonly ILogger<VideoController> _logger;
+        private readonly IDeepwareDetectionService<VideoReportApiRequestModel, VideoReportApiResponseModel> _detectionService;
 
-        public VideoController(ILogger<VideoController> logger)
+        public VideoController(
+            IDeepwareDetectionService<VideoReportApiRequestModel, VideoReportApiResponseModel> detectionService,
+            ILogger<VideoController> logger)
         {
+            _detectionService = detectionService;
             _logger = logger;
-        }
-
-        [HttpGet(Constant.Scan + "/{url}")]
-        [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get(string url, CancellationToken cancellationToken = default)
-        {
-            var videoResponse = new VideoResponse()
-            {
-                Url = url
-            };
-            return Ok(videoResponse); ;
         }
 
         [HttpPost(Constant.Scan)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post(IFormFile formFile, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Post([AllowedExtensions(new[] { ".mov", ".mp4", ".avi" })] IFormFile formFile, CancellationToken cancellationToken = default)
         {
-            return Ok();
+            var response = await _detectionService.ScanAsync(formFile, cancellationToken);
+            
+            return Ok(response);
         }
     }
 }

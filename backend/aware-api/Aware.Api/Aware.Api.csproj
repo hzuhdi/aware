@@ -1,18 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>db547a56-7a87-40ed-83ae-fac77a03e7a5</UserSecretsId>
-    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>.</DockerfileContext>
+	<TargetFramework>net6.0</TargetFramework>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<UserSecretsId>db547a56-7a87-40ed-83ae-fac77a03e7a5</UserSecretsId>
+	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<DockerfileContext>.</DockerfileContext>
+	<DockerfileFile>..\Dockerfile</DockerfileFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
-    <PackageReference Include="Swashbuckle" Version="5.6.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+	<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
+	<PackageReference Include="Swashbuckle" Version="5.6.0" />
+	<PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<ProjectReference Include="..\Aware.Api.Core\Aware.Api.Core.csproj" />
+	<ProjectReference Include="..\Aware.Api.MachineLearningClient\Aware.Api.MachineLearningClient.csproj" />
   </ItemGroup>
 
 </Project>
