@@ -1,3 +1,6 @@
+using Aware.Api.Core.Extensions;
+using Aware.Api.MachineLearningClient.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -7,6 +10,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
+builder.Services.AddMachineLearningServices();
+builder.Services.AddCoreServices();
 
 var app = builder.Build();
 
@@ -17,6 +22,17 @@ app.UseHttpsRedirection();
 
 app.MapControllers();
 app.UseRouting();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors(builder =>
+    {
+        builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+}
 
 app.UseAuthorization();
 
