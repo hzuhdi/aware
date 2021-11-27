@@ -23,6 +23,17 @@ app.UseHttpsRedirection();
 app.MapControllers();
 app.UseRouting();
 
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors(builder =>
+    {
+        builder
+        .AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+}
+
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
