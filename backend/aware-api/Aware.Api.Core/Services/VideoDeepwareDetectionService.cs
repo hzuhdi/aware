@@ -18,8 +18,10 @@ namespace Aware.Api.Core.Services
         public async Task<VideoReportApiResponseModel?> ScanAsync(VideoReportApiRequestModel requestModel, CancellationToken cancellationToken = default) 
             => await ScanAsync(requestModel.UploadFile, cancellationToken);
 
-        public async Task<VideoReportApiResponseModel?> ScanAsync(IFormFile file, CancellationToken cancellationToken = default)
+        public async Task<VideoReportApiResponseModel?> ScanAsync(IFormFile? file, CancellationToken cancellationToken = default)
         {
+            if(file == null) return null;
+
             var filename = file.FileName;
             var currentDirectory = GetCurrentInputDirectory();
             string filepath = $"{currentDirectory}\\{filename}";
@@ -60,10 +62,12 @@ namespace Aware.Api.Core.Services
             string path = Uri.UnescapeDataString(uri.Path);
             string? currentDirectory = Path.GetDirectoryName(path);
 
-            currentDirectory += "\\Input";
+            if(string.IsNullOrEmpty(currentDirectory)) return null;
+
+            currentDirectory = Path.Combine(currentDirectory, "Input");
             CreateDirectoryIfExists(currentDirectory);
 
-            currentDirectory += $"\\{FileInputFolder}";
+            currentDirectory = Path.Combine(currentDirectory, FileInputFolder);
             CreateDirectoryIfExists(currentDirectory);
 
             return currentDirectory;

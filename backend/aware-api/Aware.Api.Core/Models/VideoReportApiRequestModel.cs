@@ -5,7 +5,7 @@ namespace Aware.Api.Core.Models
 {
     public class VideoReportApiRequestModel : IApiRequestModel
     {
-        public IFormFile UploadFile { get; set; }
+        public IFormFile? UploadFile { get; set; }
     }
 
 }

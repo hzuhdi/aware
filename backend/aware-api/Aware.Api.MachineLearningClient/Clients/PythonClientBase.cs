@@ -15,12 +15,11 @@ namespace Aware.Api.MachineLearningClient.Clients
 
         protected string GetFilePath(string filename)
         {
-            string ScriptFolderName = "Scripts";
             string codeBase = Assembly.GetExecutingAssembly().CodeBase;
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
             string? currentDirectory = Path.GetDirectoryName(path);
-            return $"{currentDirectory}\\{ScriptFolderName}\\{filename}";
+            return Path.Combine(Path.Combine(currentDirectory, "Scripts"), filename);
         }
 
         protected async Task InitializeEngineWithScript(string script, CancellationToken cancellationToken)

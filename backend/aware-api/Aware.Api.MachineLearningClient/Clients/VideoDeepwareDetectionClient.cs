@@ -16,10 +16,8 @@ namespace Aware.Api.MachineLearningClient.Clients
             await InitalizeEngineWithFileScript(fileDirectory, cancellationToken);
 
             var analyzeVideo = _scope?.GetVariable<Func<string, string>>("analyzeVideo");
-            if (analyzeVideo == null)
-            {
-                throw new ArgumentNullException(nameof(analyzeVideo));
-            }
+            if (analyzeVideo == null) throw new ArgumentNullException(nameof(analyzeVideo));
+
             string? jsonString = null;
 
             await Task.Factory.StartNew(() => jsonString = analyzeVideo(requestModel.Filepath));
