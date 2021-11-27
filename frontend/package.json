@@ -4,6 +4,7 @@
     "private": true,
     "homepage": "https://berrydashboard.io/free",
     "dependencies": {
+        "@auth0/auth0-react": "^1.8.0",
         "@emotion/cache": "^11.4.0",
         "@emotion/react": "^11.4.0",
         "@emotion/styled": "^11.3.0",

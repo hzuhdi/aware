@@ -3,17 +3,21 @@ import { Typography } from '@mui/material';
 
 // project imports
 import MainCard from 'ui-component/cards/MainCard';
+import Button from '@mui/material/Button';
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const SamplePage = () => (
-    <MainCard title="Sample Card">
-        <Typography variant="body2">
-            Lorem ipsum dolor sit amen, consenter nipissing eli, sed do elusion tempos incident ut laborers et doolie magna alissa. Ut enif
-            ad minim venice, quin nostrum exercitation illampu laborings nisi ut liquid ex ea commons construal. Duos aube grue dolor in
-            reprehended in voltage veil esse colum doolie eu fujian bulla parian. Exceptive sin ocean cuspidate non president, sunk in culpa
-            qui officiate descent molls anim id est labours.
+    <MainCard title="Welcome to Aware Platform! 👀" align="center">
+        <Typography variant="body1" align="center">
+            Aware is DeepFake detection solution 🌎 built on top of different existing pre-trained open source models
         </Typography>
+        <br></br>
+        <br></br>
+        <Typography align="center">
+            <Button variant="contained">Login / SignUp</Button>
+        </Typography>
+
     </MainCard>
 );
 

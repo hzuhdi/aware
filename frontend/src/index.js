@@ -12,12 +12,17 @@ import { store } from 'store';
 // style + assets
 import 'assets/scss/style.scss';
 
+import Auth0ProviderWithHistory from 'auth/auth0-provider-with-history';
+
+
 // ==============================|| REACT DOM RENDER  ||============================== //
 
 ReactDOM.render(
     <Provider store={store}>
         <BrowserRouter>
-            <App />
+            <Auth0ProviderWithHistory>
+                <App />
+            </Auth0ProviderWithHistory>
         </BrowserRouter>
     </Provider>,
     document.getElementById('root')

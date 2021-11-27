@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -66,8 +66,6 @@ const FirebaseRegister = ({ ...others }) => {
         return { registering };
     }
 
-    // const connectedRegisterPage = connect(mapState, actionCreators)(RegisterPage);
-
     const googleHandler = async () => {
         console.error('Register');
     };
@@ -102,7 +100,6 @@ const FirebaseRegister = ({ ...others }) => {
     }
 
     const handleSubmit = (event) => {
-        event.preventDefault();
         setSubmit(true);
         if (firstName && lastName && username && password) {
             this.props.register({
@@ -133,7 +130,7 @@ const FirebaseRegister = ({ ...others }) => {
                             <Box sx={{ mr: { xs: 1, sm: 2, width: 20 } }}>
                                 <img src={Google} alt="google" width={16} height={16} style={{ marginRight: matchDownSM ? 8 : 16 }} />
                             </Box>
-                            Sign up with Googled
+                            Sign up with Google
                         </Button>
                     </AnimateButton>
                 </Grid>
@@ -181,7 +178,7 @@ const FirebaseRegister = ({ ...others }) => {
                     try {
                         if (scriptedRef.current) {
                             setStatus({ success: true });
-                            setSubmitting(false);
+                            handleSubmit();
                         }
                     } catch (err) {
                         console.error(err);
@@ -335,7 +332,7 @@ const FirebaseRegister = ({ ...others }) => {
                                     variant="contained"
                                     color="secondary"
                                 >
-                                    Sign upddd
+                                    Sign up
                                 </Button>
                             </AnimateButton>
                         </Box>
