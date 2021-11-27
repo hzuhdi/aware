@@ -1,14 +1,26 @@
-﻿namespace Aware.Api.MachineLearningClient.Clients
+﻿using System.Reflection;
+
+namespace Aware.Api.MachineLearningClient.Clients
 {
     public abstract class PythonClientBase
     {
-        private Microsoft.Scripting.Hosting.ScriptEngine? _engine;
+        protected Microsoft.Scripting.Hosting.ScriptEngine? _engine;
         protected Microsoft.Scripting.Hosting.ScriptScope? _scope;
 
         public PythonClientBase()
         {
             _engine = IronPython.Hosting.Python.CreateEngine();
             _scope = _engine.CreateScope();
+        }
+
+        protected string GetFilePath(string filename)
+        {
+            string ScriptFolderName = "Scripts";
+            string codeBase = Assembly.GetExecutingAssembly().CodeBase;
+            UriBuilder uri = new UriBuilder(codeBase);
+            string path = Uri.UnescapeDataString(uri.Path);
+            string? currentDirectory = Path.GetDirectoryName(path);
+            return $"{currentDirectory}\\{ScriptFolderName}\\{filename}";
         }
 
         protected async Task InitializeEngineWithScript(string script, CancellationToken cancellationToken)
