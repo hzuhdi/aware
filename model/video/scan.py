@@ -288,14 +288,15 @@ def final_detect(videos_dir):
 		data.append({"filename": file, "label": preds[i]})
 
 	jsonData = json.dumps(data)
-	print(jsonData)
+	return jsonData
 
 def main():
 	if len(sys.argv) != 2:
 		print('usage: scan.py <videos_dir>')
 		exit(1)
 
-	final_detect(sys.argv[1])
+	jsonData = final_detect(sys.argv[1])
+	print(jsonData)
 
 
 if __name__ == '__main__':
