@@ -4,7 +4,7 @@ namespace Aware.Api.Core.Models
 {
     public class VideoReportApiResponseModel : IApiResponseModel
     {
-        public string Filename { get; set; }
+        public string? Filename { get; set; }
 
         public TimeSpan ProcessingTime { get; set; }
 

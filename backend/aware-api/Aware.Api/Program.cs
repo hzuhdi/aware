@@ -1,3 +1,4 @@
+using Aware.Api.Core.Extensions;
 using Aware.Api.MachineLearningClient.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 builder.Services.AddMachineLearningServices();
+builder.Services.AddCoreServices();
 
 var app = builder.Build();
 

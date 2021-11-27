@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using AutoMapper;
 using Aware.Api.Core.Interfaces;
 using Aware.Api.Core.Models;
 using Microsoft.AspNetCore.Http;
@@ -10,17 +9,14 @@ namespace Aware.Api.Core.Services
     {
         private const string FileInputFolder = "Videos";
         private readonly IPythonClient<VideoReportRequest, VideoReportResponse> _pythonClient;
-        private readonly IMapper _mapper;
 
-        public VideoDeepwareDetectionService(
-            IPythonClient<VideoReportRequest, VideoReportResponse> pythonClient,
-            IMapper mapper
-            )
+        public VideoDeepwareDetectionService(IPythonClient<VideoReportRequest, VideoReportResponse> pythonClient)
         {
             _pythonClient = pythonClient;
-            _mapper = mapper;
         }
 
+        public async Task<VideoReportApiResponseModel?> ScanAsync(VideoReportApiRequestModel requestModel, CancellationToken cancellationToken = default) 
+            => await ScanAsync(requestModel.UploadFile, cancellationToken);
 
         public async Task<VideoReportApiResponseModel?> ScanAsync(IFormFile file, CancellationToken cancellationToken = default)
         {
@@ -28,43 +24,33 @@ namespace Aware.Api.Core.Services
             var currentDirectory = GetCurrentInputDirectory();
             string filepath = $"{currentDirectory}\\{filename}";
 
-            // save file
+            // Save File
             await SaveFile(file, filepath);
 
-            var request = new VideoReportRequest()
+            // Execute ML model against saved file
+            var request = new VideoReportRequest();
+            request.Filepath = filepath;
+
+            var response = await _pythonClient.ExecuteAsync(request, cancellationToken);
+            if (response == null) return null;
+            var responseModel = new VideoReportApiResponseModel()
             {
-                Filepath = filepath
+                Filename = filename,
+                DeepfakePercentage = response.DeepfakePercentage,
+                ProcessingTime = response.ProcessedDate - response.InsertDate,
             };
 
-            var response = await GetResponse(request, cancellationToken);
-
+            // Delete saved file
             File.Delete(request.Filepath);
 
-            return response;
+            return responseModel;
         }
 
         private static async Task SaveFile(IFormFile file, string filepath)
         {
-            if (file.Length > 0)
-            {
-                using (Stream fileStream = new FileStream(filepath, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-            }
-        }
-
-        private async Task<VideoReportApiResponseModel?> GetResponse(VideoReportRequest request, CancellationToken cancellationToken)
-        {
-            var response = await _pythonClient.ExecuteAsync(request, cancellationToken);
-            if (response == null) return null;
-            var responseModel = _mapper.Map<VideoReportResponse, VideoReportApiResponseModel>(response);
-            return responseModel;
-        }
-
-        public async Task<VideoReportApiResponseModel?> ScanAsync(VideoReportApiRequestModel requestModel, CancellationToken cancellationToken = default)
-        {
-            return await ScanAsync(requestModel.UploadFile, cancellationToken);
+            if (file.Length <= 0) return;
+            using Stream fileStream = new FileStream(filepath, FileMode.Create);
+            await file.CopyToAsync(fileStream);
         }
 
         private static string? GetCurrentInputDirectory()
@@ -73,7 +59,21 @@ namespace Aware.Api.Core.Services
             UriBuilder uri = new UriBuilder(codeBase);
             string path = Uri.UnescapeDataString(uri.Path);
             string? currentDirectory = Path.GetDirectoryName(path);
-            return $"{currentDirectory}\\Input\\{FileInputFolder}";
+
+            currentDirectory += "\\Input";
+            CreateDirectoryIfExists(currentDirectory);
+
+            currentDirectory += $"\\{FileInputFolder}";
+            CreateDirectoryIfExists(currentDirectory);
+
+            return currentDirectory;
+        }
+
+        private static void CreateDirectoryIfExists(string? currentDirectory)
+        {
+            if (string.IsNullOrEmpty(currentDirectory)) return;
+            if (Directory.Exists(currentDirectory)) return;
+            Directory.CreateDirectory(currentDirectory);
         }
     }
 }

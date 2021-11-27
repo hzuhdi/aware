@@ -25,7 +25,7 @@ namespace Aware.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> Post([AllowedExtensions(new[] { ".mp4", ".avi" })] IFormFile formFile, CancellationToken cancellationToken = default)
+        public async Task<IActionResult> Post([AllowedExtensions(new[] { ".mov", ".mp4", ".avi" })] IFormFile formFile, CancellationToken cancellationToken = default)
         {
             var response = await _detectionService.ScanAsync(formFile, cancellationToken);
             
