@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: aware-frontend
+  name: aware-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aware-frontend
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: aware-frontend
+    spec:
+      containers:
+      - image: hafizhaz/aware-frontend:latest
+        name: aware-frontend
+        resources: {}
+        ports:
+        - containerPort: 80
+status: {}

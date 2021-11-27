@@ -2,12 +2,14 @@
 // import dashboard from './dashboard';
 // import pages from './pages';
 // import utilities from './utilities';
+// import other from './other';
 import homepage from './homepage';
+import detector from './detector';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-    items: [homepage]
+    items: [homepage, detector]
 };
 
 export default menuItems;

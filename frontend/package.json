@@ -2,7 +2,6 @@
     "name": "aware-frontend",
     "version": "1.0.0",
     "private": true,
-    "homepage": "http://hafizhahmadzuhdi.nl",
     "dependencies": {
         "@auth0/auth0-react": "^1.8.0",
         "@emotion/cache": "^11.4.0",
