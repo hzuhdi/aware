@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Grid, Link } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Grid } from '@mui/material';
 import MuiTypography from '@mui/material/Typography';
 
 // project imports
@@ -7,56 +8,112 @@ import SubCard from 'ui-component/cards/SubCard';
 import MainCard from 'ui-component/cards/MainCard';
 import SecondaryAction from 'ui-component/cards/CardSecondaryAction';
 import { gridSpacing } from 'store/constant';
-import { DropzoneArea } from 'material-ui-dropzone'
-import AttachFile from '@material-ui/icons/AttachFile';
-import Button from '@material-ui/core/Button';
-import VideoUploadFile from './VideoUploadFile';
+import Button from '@mui/material/Button';
 import axios from 'axios';
 
 // ==============================|| Video ||============================== //
 
 const Video = () => {
-    const [files, setFiles] = useState([]);
+    const [file, setFile] = useState(null);
+    const [fileName, setFileName] = useState('');
+    const [fileNameResult, setFileNameResult] = useState('');
+    const [detectionResult, setDetectionResult] = useState('');
+    const [percentage, setPercentage] = useState('');
 
-    const handleChange = (files) => {
-        setFiles(files);
+    const Input = styled('input')({
+        display: 'none',
+      });
+
+    const handleChange = (event) => {
+        setFile(event.target.files[0]);
+        setFileName(event.target.files[0].name);
     };
 
     const uploadFile = () => {
-        console.log(files);
-        let fd = new FormData();
-        files.map((file) => {
-            fd.append('File[]', file);
-        });
-
-        axios.post(`https://localhost:7057/Video/Scan`, fd, {
+        let formFile = new FormData();
+        formFile.append('formFile', file);
+        axios.post(`https://localhost:7057/Video/Scan`, formFile, {
             headers: {
                 'Content-Type': 'multipart/form-data'
               }
           })
             .then(res => {
                 console.log(res);
-                console.log(res.data);
+                if (res.status == 200) {
+                    console.log(res.data);
+                    setFileNameResult(res.data.filename ?? '');
+                    setDetectionResult(res.data.label ?? '');
+                    setPercentage(res.data.percentage ?? '');
+                }
             })
     }
 
     return (
         <MainCard title="Video" secondary={<SecondaryAction link="https://next.material-ui.com/system/typography/" />}>
             <Grid container spacing={gridSpacing}>
-                <Grid item xs={12} sm={12}>
-                    <DropzoneArea
-                        onChange={handleChange.bind(this)}
-                        dropzoneText='Drag and drop a file here or click (mp4 or mov)'
-                        acceptedFiles={['video/mp4','video/mov']}
-                        maxFileSize={25000000} // 25mb
-                        filesLimit={1} />
+                <Grid item xs={12} sm={6}>
+                    <SubCard title="Upload">
+                        <Grid container spacing={gridSpacing} style={{textAlign: "center"}} direction="column">
+                            <Grid item>
+                                <label htmlFor="contained-button-file">
+                                    <Input accept="video/mp4,video/mov" id="contained-button-file" multiple type="file" onChange={handleChange} />
+                                    <Button variant="contained" component="span">
+                                        Browse Video
+                                    </Button>
+                                </label>
+                            </Grid>
+                            <Grid item>
+                                <MuiTypography variant="h3" >
+                                    {fileName}
+                                </MuiTypography>
+                            </Grid>
+                            { file !== null && (<Grid item>
+                                <Button variant="contained" component="span" onClick={uploadFile}>
+                                    Upload
+                                </Button>
+                            </Grid>)}
+                        </Grid>
+                    </SubCard>
                 </Grid>
-            </Grid>
-            <Grid container spacing={gridSpacing}>
-                <Grid item xs={12} sm={12}>
-                    <Button variant="outlined" color="primary" onClick={uploadFile.bind(this)}>
-                        Upload
-                    </Button>
+                <Grid item xs={12} sm={6}>
+                    <SubCard title="Result">
+                        <Grid container spacing={gridSpacing}>
+                            <Grid item xs={4}>
+                                <MuiTypography variant="h4" >
+                                    Filename
+                                </MuiTypography>
+                            </Grid>
+                            <Grid item>
+                                <MuiTypography variant="h4" >
+                                    { fileNameResult !== '' ? fileNameResult : '-' }
+                                </MuiTypography>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={gridSpacing}>
+                            <Grid item xs={4}>
+                                <MuiTypography variant="h4" >
+                                    Detection Result
+                                </MuiTypography>
+                            </Grid>
+                            <Grid item>
+                                <MuiTypography variant="h4" >
+                                    { detectionResult !== '' ? detectionResult : '-' }
+                                </MuiTypography>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={gridSpacing}>
+                            <Grid item xs={4}>
+                                <MuiTypography variant="h4" >
+                                    Percentage
+                                </MuiTypography>
+                            </Grid>
+                            <Grid item>
+                                <MuiTypography variant="h4" >
+                                    { percentage !== '' ? percentage : '-' }
+                                </MuiTypography>
+                            </Grid>
+                        </Grid>
+                    </SubCard>
                 </Grid>
             </Grid>
         </MainCard>
