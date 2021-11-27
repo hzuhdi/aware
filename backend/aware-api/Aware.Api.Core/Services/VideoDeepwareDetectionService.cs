@@ -24,7 +24,7 @@ namespace Aware.Api.Core.Services
 
             var filename = file.FileName;
             var currentDirectory = GetCurrentInputDirectory();
-            string filepath = $"{currentDirectory}\\{filename}";
+            var filepath = Path.Combine(currentDirectory, filename);
 
             // Save File
             await SaveFile(file, filepath);
