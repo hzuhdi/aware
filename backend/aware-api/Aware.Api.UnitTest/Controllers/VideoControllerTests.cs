@@ -1,8 +1,11 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Aware.Api.Controllers;
-using Aware.Api.Models;
+using Aware.Api.Core.Interfaces;
+using Aware.Api.Core.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -12,27 +15,42 @@ namespace Aware.Api.UnitTest.Controllers
 {
     public class VideoControllerTests
     {
+        private Mock<IPythonClient<VideoReportRequest, VideoReportResponse>> _pythonClient;
         private VideoController _controller;
-        
+
         public VideoControllerTests()
         {
-            _controller = new VideoController(Mock.Of<ILogger<VideoController>>());
+            _pythonClient = new Mock<IPythonClient<VideoReportRequest, VideoReportResponse>>();
+            _controller = new VideoController(_pythonClient.Object, Mock.Of<ILogger<VideoController>>());
         }
 
         [Fact]
-        public async Task Get_WithValidUrl_ReturnsOk()
+        public async Task Scan_ReturnsOk()
         {
-            var url = "https://www.google.com/";
+            // Arrange
+            string filename = Guid.NewGuid().ToString();
 
-            var controllerResult = await _controller.Get(url);
+            var dfPercentage = new Random().NextDouble();
 
-            controllerResult.Should().BeOfType<OkObjectResult>();
+            var item = new Mock<IFormFile>();
+            item.Setup(i => i.FileName).Returns(filename);
 
-            var result = controllerResult as OkObjectResult;
-            result?.Value.Should().BeOfType<VideoResponse>();
+            _pythonClient.Setup(x => x.ExecuteAsync(It.IsAny<VideoReportRequest>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new VideoReportResponse() { Filename = filename, DeepfakePercentage = dfPercentage});
 
-            var videoResponse = result?.Value as VideoResponse;
-            videoResponse?.Url.Should().Be(url);
+
+            // Act
+            var result = await _controller.Post(item.Object);
+
+            // Assert
+            result.Should().BeOfType<OkObjectResult>();
+            var okResult = (OkObjectResult)result;
+            okResult.Value.Should().BeOfType<VideoReportResponse>();
+            var response = (VideoReportResponse)okResult.Value;
+            response.Should().NotBeNull();
+            response.Filename.Should().Be(filename);
+            response.DeepfakePercentage.Should().Be(dfPercentage);
+            response.ProcessedDate.Should().BeAfter(response.InsertDate);
         }
     }
 }
