@@ -1,8 +1,9 @@
 {
-    "name": "berry-material-react-free",
-    "version": "3.0.0",
+    "name": "aware-frontend",
+    "version": "1.0.0",
     "private": true,
     "dependencies": {
+        "@auth0/auth0-react": "^1.8.0",
         "@emotion/cache": "^11.4.0",
         "@emotion/react": "^11.4.0",
         "@emotion/styled": "^11.3.0",
@@ -36,6 +37,8 @@
         "react-router-dom": "6.0.0-beta.0",
         "react-scripts": "^4.0.3",
         "redux": "^4.0.5",
+        "redux-logger": "^3.0.6",
+        "redux-thunk": "^2.4.1",
         "yup": "^0.32.9"
     },
     "scripts": {

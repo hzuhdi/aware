@@ -1,26 +1,43 @@
 ## Aware Frontend
 
-## Table of contents
+---
 
-  * [Getting Started](#getting-started)
-  * [Documentation](#documentation)
-  * [Technology Stack](#technology-stack)
-  * [Author](#author)
-  * [Issues?](#issues)
-  * [License](#license)
-  * [More Products](#more-free-react-material-admin-templates)
-  * [Follow us](#follow-us)
+### How to run Aware Application ?
 
- ## Documentation
+1. W/O docker 🤫
 
- [Documentation](https://codedthemes.gitbook.io/berry/)
+```
+# Go to folder frontend
+cd frontend
+# Create env var file
+touch .env
+```
 
- ## Technology Stack
+```
+# create following lines
+REACT_APP_AUTH0_DOMAIN = <Your AUTH0 domain>
+REACT_APP_AUTH0_CLIENT_ID = <Your AUTH0 client ID>
+REACT_APP_BACKEND_URL =  <Your Backend URL: see backend part>
+```
 
-  - [Material UI V5](https://material-ui.com/)
-  - Built with React Hooks API
-  - Redux & React Context API for State Management
-  - React Router for Navigation Routing
-  - Support of react-script
-  - Code Splitting
-  - CSS-in-JS where CSS is composed using JavaScript instead of defined in external files
+```
+# Install node modules
+npm install
+
+# Spin up the development server
+npm run start
+```
+
+2. With docker 🐳
+
+```
+docker build -t <yourimagename> . 
+--build-arg REACT_APP_AUTH0_DOMAIN=<domain> \
+--build-arg REACT_APP_AUTH0_CLIENT_ID=<clientID> \
+--build-arg REACT_APP_BACKEND_URL=<URL> \
+```
+
+```
+docker run -it --rm -p 80:80 <imagename>:latest   
+```
+

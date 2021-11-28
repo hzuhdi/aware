@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 
 // material-ui
 import { useTheme } from '@mui/material/styles';
@@ -36,6 +36,8 @@ import { strengthColor, strengthIndicator } from 'utils/password-strength';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
+import { userActions } from 'store/actions'
+
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
 const FirebaseRegister = ({ ...others }) => {
@@ -48,6 +50,21 @@ const FirebaseRegister = ({ ...others }) => {
 
     const [strength, setStrength] = useState(0);
     const [level, setLevel] = useState();
+
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [submit, setSubmit] = useState(false);
+
+    const actionCreators = {
+        register: userActions.register
+    }
+
+    function mapState(state) {
+        const { registering } = state.registration;
+        return { registering };
+    }
 
     const googleHandler = async () => {
         console.error('Register');
@@ -70,6 +87,29 @@ const FirebaseRegister = ({ ...others }) => {
     useEffect(() => {
         changePassword('123456');
     }, []);
+
+    // Newly added functionl
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        switch(name){
+            case "firstName":
+                setFirstName(value);
+            case "lastName":
+                setLastName(value);
+        }
+    }
+
+    const handleSubmit = (event) => {
+        setSubmit(true);
+        if (firstName && lastName && username && password) {
+            this.props.register({
+                "firstName": firstName,
+                "lastName": lastName,
+                "username": username,
+                "password": password
+            });
+        }
+    }
 
     return (
         <>
@@ -138,7 +178,7 @@ const FirebaseRegister = ({ ...others }) => {
                     try {
                         if (scriptedRef.current) {
                             setStatus({ success: true });
-                            setSubmitting(false);
+                            handleSubmit();
                         }
                     } catch (err) {
                         console.error(err);

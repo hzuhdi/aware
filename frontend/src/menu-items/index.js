@@ -1,13 +1,15 @@
-import dashboard from './dashboard';
+// TODO: Don't remove this, this supposed to be for Leaderbords etc
+// import dashboard from './dashboard';
+// import pages from './pages';
+// import utilities from './utilities';
+// import other from './other';
+import homepage from './homepage';
 import detector from './detector';
-import pages from './pages';
-import utilities from './utilities';
-import other from './other';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-    items: [dashboard, detector, pages, utilities, other]
+    items: [homepage, detector]
 };
 
 export default menuItems;
